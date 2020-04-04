@@ -4,8 +4,13 @@ import logo from './assets/logo.png';
 import * as ImagePicker from 'expo-image-picker';
 import * as Sharing from 'expo-sharing';
 import uploadToAnonymousFilesAsync from 'anonymous-files'; 
+import { SplashScreen } from 'expo';
 
 export default function App() {
+  // SplashScreen debugger
+  SplashScreen.preventAutoHide();
+  setTimeout(SplashScreen.hide, 5000);
+  
   let [selectedImage, setSelectedImage]: any = React.useState(null);
 
   let openImagePickerAsync = async () => {
