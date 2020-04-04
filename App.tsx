@@ -1,8 +1,37 @@
 import React from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity,View } from 'react-native';
 import logo from './assets/logo.png';
+import * as ImagePicker from 'expo-image-picker';
 
 export default function App() {
+  let [selectedImage, setSelectedImage]: any = React.useState(null);
+
+  let openImagePickerAsync = async () => {
+    let permissionResult = await ImagePicker.requestCameraRollPermissionsAsync();
+
+    if (!permissionResult.granted) {
+      alert("Permission to access camera roll is required!");
+      return;
+    }
+
+    let pickerResult = await ImagePicker.launchImageLibraryAsync();
+    
+    if (pickerResult.cancelled) return;
+
+    setSelectedImage({ localUri: pickerResult.uri });
+  };
+
+  if (selectedImage) {
+    return (
+      <View style={styles.container}>
+        <Image
+          source={{ uri: selectedImage.localUri }}
+          style={styles.thumbnail}
+        />
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
       <Image source={logo} style={styles.logo} />
@@ -12,7 +41,7 @@ export default function App() {
        </Text>
 
        <TouchableOpacity
-          onPress={ () => alert('Hello, world!')}
+          onPress={openImagePickerAsync}
           style={styles.button}>
           <Text style={styles.buttonText}>
             Pick a photo
@@ -48,4 +77,9 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: '#fff'
   },
+  thumbnail: {
+    width: 300,
+    height: 300,
+    resizeMode: "contain"
+  }
 });
